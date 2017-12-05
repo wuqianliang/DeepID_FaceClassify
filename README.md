@@ -1,3 +1,6 @@
+# 修改
+原本是第一代deepID算法用theano实现，无奈theano停止维护了，这边我用tensorflow再实现一遍。第一代deepid那会还是caffe的天下，所以没有tensorflow版本。。。
+
 # DeepID_FaceClassify
 
 Implementation of DeepID using theano.
