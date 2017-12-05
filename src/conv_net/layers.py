@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-# -*- coding:utf8 -*-
+# -*- coding:utf-8 -*-
 
 import numpy
 import theano
 import theano.tensor as T
-from theano.tensor.signal import downsample
+from theano.tensor.nnet.signal.pool import downsample
 from theano.tensor.nnet import conv
 
 def relu(x):
@@ -106,7 +106,7 @@ class LeNetConvLayer(object):
                 filter_shape = filter_shape,
                 image_shape = image_shape)
         conv_out = (conv_out + self.b.dimshuffle('x', 0, 'x', 'x'))
-	self.output = conv_out if activation is None else activation(conv_out)
+        self.output = conv_out if activation is None else activation(conv_out)
         self.params = [self.W, self.b]
 
 class PoolLayer(object):
@@ -142,13 +142,13 @@ class LeNetConvPoolLayer(object):
                 filters = self.W,
                 filter_shape = filter_shape,
                 image_shape = image_shape)
-	conv_out = conv_out + self.b.dimshuffle('x', 0, 'x', 'x')
-	if not activation is None:
-	    conv_out = activation(conv_out)
+        conv_out = conv_out + self.b.dimshuffle('x', 0, 'x', 'x')
+        if not activation is None:
+	        conv_out = activation(conv_out)
 
         pooled_out = downsample.max_pool_2d(
                 input = conv_out,
                 ds = poolsize,
                 ignore_border=True)
-	self.output = pooled_out
+        self.output = pooled_out
         self.params = [self.W, self.b]

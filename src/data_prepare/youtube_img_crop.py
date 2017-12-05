@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# -*- coding:utf8 -*-
+# -*- coding:utf-8 -*-
 
-import Image
+from PIL import Image
 import sys
 import os
 

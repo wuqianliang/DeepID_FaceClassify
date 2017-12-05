@@ -4,7 +4,7 @@
 from layers import *
 from load_data import *
 
-import cPickle
+import _pickle as cPickle
 import gzip
 import os
 import sys
@@ -25,13 +25,13 @@ class ParamDumpHelper:
         f = gzip.open(self.dump_file, 'wb')
         if len(params) > 20:
             params = params[10:]
-        pickle.dump(params, f)
+        cPickle.dump(params, f)
         f.close()
 
     def get_params_from_file(self):
         if os.path.exists(self.dump_file):
             f = gzip.open(self.dump_file, 'rb')
-            dumped_params = pickle.load(f)
+            dumped_params = cPickle.load(f)
             f.close()
             return dumped_params
         return []
@@ -55,7 +55,7 @@ class DeepID:
                                  0]
 
     def load_data_deepid(self, dataset_file, batch_size):
-        print 'loading data ...'
+        print('loading data ...')
         datasets = load_data_split_pickle(dataset_file)
         self.train_set_x, self.train_set_y = datasets[0]
         self.valid_set_x, self.valid_set_y = datasets[1]
@@ -64,10 +64,10 @@ class DeepID:
         self.n_valid_batches = self.valid_set_x.get_value(borrow=True).shape[0] / batch_size
         self.batch_size = batch_size
 
-        print 'train_x: ', self.train_set_x.get_value(borrow=True).shape
-        print 'train_y: ', self.train_set_y.shape
-        print 'valid_x: ', self.valid_set_x.get_value(borrow=True).shape
-        print 'valid_y: ', self.valid_set_y.shape
+        print ('train_x: ', self.train_set_x.get_value(borrow=True).shape)
+        print ('train_y: ', self.train_set_y.shape)
+        print ('valid_x: ', self.valid_set_x.get_value(borrow=True).shape)
+        print ('valid_y: ', self.valid_set_y.shape)
 
 
     def layer_params(self, nkerns=[20,40,60,80]):
@@ -97,7 +97,7 @@ class DeepID:
         self.x = T.matrix('x')
         self.y = T.ivector('y')
 
-        print 'building the model ...'
+        print ('building the model ...')
         
         layer1_input = self.x.reshape(self.layer1_image_shape)
         self.layer1 = LeNetConvPoolLayer(self.rng,
@@ -194,7 +194,7 @@ class DeepID:
                 )
 
     def train(self, n_epochs, learning_rate):
-        print 'Training the model ...'
+        print ('Training the model ...')
         train_sample_num = self.train_set_x.get_value(borrow=True).shape[0]
         valid_sample_num = self.valid_set_x.get_value(borrow=True).shape[0]
 
@@ -217,7 +217,7 @@ class DeepID:
             train_score = numpy.mean(train_losses)
             valid_score = numpy.mean(valid_losses)
             loss_records.append((epoch, train_score, valid_score))
-            print '\nepoch %i, train_score %f, valid_score %f' % (epoch, train_score, valid_score)
+            print ('\nepoch %i, train_score %f, valid_score %f' % (epoch, train_score, valid_score))
 
             params = [self.softmax_layer.params, 
                       self.deepid_layer.params, 
@@ -245,13 +245,13 @@ def simple_deepid(learning_rate, n_epochs, dataset, params_file,
     deepid.build_train_model()
     loss_records = deepid.train(n_epochs, learning_rate)
     
-    print ''
+    print ('')
     for record in loss_records:
-        print record[0], record[1], record[2]
+        print (record[0], record[1], record[2])
     
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        print 'Usage: python %s vec_valid vec_train params_file' % (sys.argv[0])
+        print ('Usage: python %s vec_valid vec_train params_file' % (sys.argv[0]))
         sys.exit()
     simple_deepid(learning_rate=0.01, n_epochs=20, dataset=(sys.argv[1], sys.argv[2]), params_file=sys.argv[3], nkerns=[20,40,60,80], batch_size=500, n_hidden=160, n_out=1595, acti_func=relu)

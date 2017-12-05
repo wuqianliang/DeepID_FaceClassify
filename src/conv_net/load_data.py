@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# -*- coding:utf8 -*-
+# -*- coding:utf-8 -*-
 
-import cPickle
+import _pickle as cPickle
 import pickle
 import gzip
 import os
